@@ -32,21 +32,16 @@ public static class DependencyInjection
            IConfiguration configuration)
     {
 
-
-
         #region UnitOfWork
         services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
         #endregion
 
         #region Repositorises
         services.AddScoped<IFollowsRepository, FollowsRepository>();
-<<<<<<< Product_Entities
 
         services.AddScoped<IProductImageRepository, ProductImageRepository>();
 
-=======
         services.AddScoped<ICategoryRepository, CategoryRepository>();
->>>>>>> main
         #endregion
 
 
