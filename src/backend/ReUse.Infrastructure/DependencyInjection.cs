@@ -12,6 +12,7 @@ using ReUse.Application.Interfaces;
 using ReUse.Application.Interfaces.Repository;
 using ReUse.Application.Interfaces.Services.Account_Managemet;
 using ReUse.Application.Interfaces.Services.Auth;
+using ReUse.Application.Interfaces.Services.Categories;
 using ReUse.Application.Interfaces.Services.Images;
 using ReUse.Application.Interfaces.Services.Products;
 using ReUse.Application.Interfaces.Services.UserProfile;
@@ -39,15 +40,20 @@ public static class DependencyInjection
 
         #region Repositorises
         services.AddScoped<IFollowsRepository, FollowsRepository>();
+<<<<<<< Product_Entities
 
         services.AddScoped<IProductImageRepository, ProductImageRepository>();
 
+=======
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+>>>>>>> main
         #endregion
 
 
         #region Services
         services.AddScoped<IAuthService, JwtAuthService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IAuthorizationHandler, ActiveUserHandler>();
         #endregion
