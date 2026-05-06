@@ -1,4 +1,3 @@
-
 using ReUse.Application.Interfaces.Repository;
 
 namespace ReUse.Application.Interfaces;
@@ -9,6 +8,8 @@ public interface IUnitOfWork : IDisposable
     IFollowRepository Follow { get; }
     IProductImageRepository ProductImages { get; }
     ICategoryRepository Category { get; }
+
+    ICategoryFollowRepository CategoryFollow { get; }
     Task<int> SaveChangesAsync();
     void Dispose();
 }

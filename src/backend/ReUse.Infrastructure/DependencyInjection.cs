@@ -38,6 +38,9 @@ public static class DependencyInjection
         ProductImageRepository>();
         services.AddScoped<ICategoryRepository,
         CategoryRepository>();
+        services.AddScoped<ICategoryFollowRepository,
+        CategoryFollowRepository>();
+
         #endregion
 
         #region Services
@@ -47,6 +50,7 @@ public static class DependencyInjection
         AccountService>();
         services.AddScoped<IAuthorizationHandler,
         ActiveUserHandler>();
+
         #endregion
 
         #region ImageServic

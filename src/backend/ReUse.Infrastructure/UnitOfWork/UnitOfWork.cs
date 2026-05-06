@@ -1,4 +1,3 @@
-
 using ReUse.Application.Interfaces;
 using ReUse.Application.Interfaces.Repository;
 using ReUse.Infrastructure.Persistence;
@@ -16,12 +15,15 @@ public class UnitOfWork : IUnitOfWork
         Follow = new FollowRepository(_context);
         Category = new CategoryRepository(_context);
         ProductImages = new ProductImageRepository(_context);
+        CategoryFollow = new CategoryFollowRepository(_context);
     }
     public IUserRepository User { get; private set; }
 
     public IFollowRepository Follow { get; private set; }
     public IProductImageRepository ProductImages { get; private set; }
     public ICategoryRepository Category { get; private set; }
+
+    public ICategoryFollowRepository CategoryFollow { get; private set; }
 
     public async Task<int> SaveChangesAsync()
     {
