@@ -26,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<ICategoryFollowService, CategoryFollowService>();
+        services.AddScoped<IProductService, ProductService>();
         #endregion
 
 
