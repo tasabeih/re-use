@@ -4,10 +4,14 @@ namespace ReUse.Application.Interfaces;
 
 public interface IUnitOfWork : IDisposable
 {
+    Task BeginTransactionAsync();
+    Task CommitTransactionAsync();
+    Task RollbackTransactionAsync();
     IUserRepository User { get; }
     IFollowRepository Follow { get; }
     IProductImageRepository ProductImages { get; }
     ICategoryRepository Category { get; }
+    IProductRepository Product { get; }
 
     ICategoryFollowRepository CategoryFollow { get; }
     Task<int> SaveChangesAsync();
