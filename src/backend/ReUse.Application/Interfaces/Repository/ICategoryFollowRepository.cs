@@ -8,5 +8,5 @@ public interface ICategoryFollowRepository : IBaseRepository<CategoryFollow>
 {
     Task<bool> IsFollowingAsync(Guid userId, Guid categoryId);
     Task<CategoryFollow?> GetFollowAsync(Guid userId, Guid categoryId);
-    Task<PagedResult<CategoryFollowResponse>> GetFollowedCategoriesAsync(Guid userId, PaginationParams pagination);
+    Task<PagedResult<CategoryFollow>> GetFollowedCategoriesAsync(Guid userId, PaginationParams pagination);
 }

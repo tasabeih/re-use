@@ -30,19 +30,14 @@ public class CategoryFollowRepository : BaseRepository<CategoryFollow>, ICategor
             .FirstOrDefaultAsync(cf => cf.UserId == userId && cf.CategoryId == categoryId);
     }
 
-    public async Task<PagedResult<CategoryFollowResponse>> GetFollowedCategoriesAsync(Guid userId, PaginationParams pagination)
+    public async Task<PagedResult<CategoryFollow>> GetFollowedCategoriesAsync(
+    Guid userId,
+    PaginationParams pagination)
     {
         return await _context.CategoryFollows
             .AsNoTracking()
             .Where(cf => cf.UserId == userId)
             .Include(cf => cf.Category)
-            .Select(cf => new CategoryFollowResponse(
-                cf.CategoryId,
-                cf.Category.Name,
-                cf.Category.Slug,
-                cf.Category.IconUrl,
-                cf.CreatedAt
-            ))
             .ToPagedListAsync(pagination.PageNumber, pagination.PageSize);
     }
 }

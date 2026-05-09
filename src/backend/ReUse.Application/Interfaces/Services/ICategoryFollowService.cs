@@ -1,5 +1,6 @@
 ﻿using ReUse.Application.DTOs;
 using ReUse.Application.DTOs.Categories;
+using ReUse.Domain.Entities;
 
 namespace ReUse.Application.Interfaces.Services;
 

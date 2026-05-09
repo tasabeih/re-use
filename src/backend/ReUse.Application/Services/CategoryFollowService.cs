@@ -1,4 +1,6 @@
-﻿using ReUse.Application.DTOs;
+﻿using AutoMapper;
+
+using ReUse.Application.DTOs;
 using ReUse.Application.DTOs.Categories;
 using ReUse.Application.Exceptions;
 using ReUse.Application.Interfaces;
@@ -10,11 +12,12 @@ namespace ReUse.Application.Services;
 public class CategoryFollowService : ICategoryFollowService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public CategoryFollowService(IUnitOfWork unitOfWork)
+    public CategoryFollowService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-
+        _mapper = mapper;
     }
 
     public async Task FollowAsync(Guid userId, Guid categoryId)
@@ -65,6 +68,15 @@ public class CategoryFollowService : ICategoryFollowService
         if (userId == Guid.Empty)
             throw new BadRequestException("Invalid userId");
 
-        return await _unitOfWork.CategoryFollow.GetFollowedCategoriesAsync(userId, pagination);
+        var follows = await _unitOfWork.CategoryFollow.GetFollowedCategoriesAsync(userId, pagination);
+
+        var mappedItems = _mapper.Map<List<CategoryFollowResponse>>(follows.Data);
+        return new PagedResult<CategoryFollowResponse>
+        {
+            Data = mappedItems,
+            PageNumber = follows.PageNumber,
+            PageSize = follows.PageSize,
+            TotalRecords = follows.TotalRecords
+        };
     }
 }
