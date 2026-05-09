@@ -11,9 +11,11 @@ public interface IUnitOfWork : IDisposable
     IFollowRepository Follow { get; }
     IProductImageRepository ProductImages { get; }
     ICategoryRepository Category { get; }
+
     IProductRepository Product { get; }
 
     ICategoryFollowRepository CategoryFollow { get; }
+
     Task<int> SaveChangesAsync();
     void Dispose();
 }
