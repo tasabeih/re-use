@@ -25,7 +25,7 @@ public class CategoryFollowsController : ControllerBase
     }
 
     // GET api/me/category-follows
-    [HttpGet()]
+    [HttpGet]
     [ProducesResponseType(typeof(PagedResult<CategoryFollowResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetFollowedCategories([FromQuery] PaginationParams pagination)
@@ -37,7 +37,7 @@ public class CategoryFollowsController : ControllerBase
     }
 
     // POST api/me/category-follows/{categoryId}
-    [HttpPost()]
+    [HttpPost("{categoryId}")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
@@ -52,7 +52,7 @@ public class CategoryFollowsController : ControllerBase
     }
 
     // DELETE api/me/category-follows/{categoryId}
-    [HttpDelete()]
+    [HttpDelete("{categoryId}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
