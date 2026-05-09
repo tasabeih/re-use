@@ -9,7 +9,7 @@ using ReUse.Application.Interfaces.Services;
 namespace ReUse.API.Controllers;
 
 [ApiController]
-[Route("api/me/")]
+[Route("api/me/category-follows")]
 [Authorize]
 public class CategoryFollowsController : ControllerBase
 {
@@ -25,7 +25,7 @@ public class CategoryFollowsController : ControllerBase
     }
 
     // GET api/me/category-follows
-    [HttpGet("category-follows")]
+    [HttpGet()]
     [ProducesResponseType(typeof(PagedResult<CategoryFollowResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetFollowedCategories([FromQuery] PaginationParams pagination)
@@ -37,7 +37,7 @@ public class CategoryFollowsController : ControllerBase
     }
 
     // POST api/me/category-follows/{categoryId}
-    [HttpPost("category-follows/{categoryId}")]
+    [HttpPost()]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
@@ -52,7 +52,7 @@ public class CategoryFollowsController : ControllerBase
     }
 
     // DELETE api/me/category-follows/{categoryId}
-    [HttpDelete("category-follows/{categoryId}")]
+    [HttpDelete()]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]

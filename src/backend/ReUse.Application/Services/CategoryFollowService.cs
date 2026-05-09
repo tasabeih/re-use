@@ -22,13 +22,16 @@ public class CategoryFollowService : ICategoryFollowService
         if (userId == Guid.Empty)
             throw new BadRequestException("Invalid userId");
 
+        if (categoryId == Guid.Empty)
+            throw new BadRequestException("Invalid categoryId");
+
         var categoryExists = await _unitOfWork.Category.ExistsAsync(categoryId);
         if (!categoryExists)
             throw new NotFoundException("Category");
 
         var isFollowing = await _unitOfWork.CategoryFollow.IsFollowingAsync(userId, categoryId);
         if (isFollowing)
-            throw new InvalidOperationException("Already following this category");
+            throw new ConflictException("Already following this category");
 
         var follow = new CategoryFollow
         {
