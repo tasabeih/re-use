@@ -13,12 +13,6 @@ namespace ReUse.Infrastructure.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "Type",
-                table: "ProductImages",
-                type: "integer",
-                nullable: false,
-                defaultValue: 0);
 
             migrationBuilder.CreateTable(
                 name: "notifications",
@@ -146,9 +140,6 @@ namespace ReUse.Infrastructure.Persistence.Migrations
             migrationBuilder.DropTable(
                 name: "notifications");
 
-            migrationBuilder.DropColumn(
-                name: "Type",
-                table: "ProductImages");
         }
     }
 }
