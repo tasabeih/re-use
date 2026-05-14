@@ -12,8 +12,8 @@ public class Notification : BaseEntity
 
     public NotificationType Type { get; set; }
 
-    public Dictionary<string, string>? Data { get; set; }
-    public Dictionary<string, string>? Metadata { get; set; }
+    public string? Data { get; set; }
+    public string? Metadata { get; set; }
 
     public bool IsRead { get; set; } = false;
     public DateTime? ReadAt { get; set; }
