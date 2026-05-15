@@ -9,12 +9,22 @@ import { GuestRoute } from "./components/GuestRoute";
 // import LoginSuccess from "./pages/LoginSuccess";
 // import { ProtectedRoute } from "./components/ProtectedRoute";
 import HomePage from "./pages/HomePage";
+import CategoriesPageWrapper from "./pages/CategoriesPageWrapper";
+import CategoryProductsPageWrapper from "./pages/CategoryProductsPageWrapper";
 
 export const router = createBrowserRouter([
   //public
   {
     path: "/",
     Component: HomePage,
+  },
+  {
+    path: "/categories",
+    Component: CategoriesPageWrapper,
+  },
+  {
+    path: "/category/:categoryId",
+    Component: CategoryProductsPageWrapper,
   },
   // ❌ Only for NON-auth users
   {
