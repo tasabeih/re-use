@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReUse.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using ReUse.Infrastructure.Persistence;
 namespace ReUse.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260506005850_AddCategoryIcon")]
+    partial class AddCategoryIcon
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,33 +80,6 @@ namespace ReUse.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("categories", (string)null);
-                });
-
-            modelBuilder.Entity("ReUse.Domain.Entities.CategoryFollow", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("UserId", "CategoryId")
-                        .IsUnique();
-
-                    b.ToTable("category_follows", (string)null);
                 });
 
             modelBuilder.Entity("ReUse.Domain.Entities.Follow", b =>
@@ -478,25 +454,6 @@ namespace ReUse.Infrastructure.Persistence.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("ReUse.Domain.Entities.CategoryFollow", b =>
-                {
-                    b.HasOne("ReUse.Domain.Entities.Category", "Category")
-                        .WithMany("Followers")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ReUse.Domain.Entities.User", "User")
-                        .WithMany("CategoryFollows")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ReUse.Domain.Entities.Follow", b =>
                 {
                     b.HasOne("ReUse.Domain.Entities.User", "FollowerUser")
@@ -582,8 +539,6 @@ namespace ReUse.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("ReUse.Domain.Entities.Category", b =>
                 {
-                    b.Navigation("Followers");
-
                     b.Navigation("Subcategories");
                 });
 
@@ -594,8 +549,6 @@ namespace ReUse.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("ReUse.Domain.Entities.User", b =>
                 {
-                    b.Navigation("CategoryFollows");
-
                     b.Navigation("Followers");
 
                     b.Navigation("Following");
