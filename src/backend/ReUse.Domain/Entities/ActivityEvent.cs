@@ -15,4 +15,4 @@ public class ActivityEvent : BaseEntity
     public string? Metadata { get; set; }
 
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
-}\
+}

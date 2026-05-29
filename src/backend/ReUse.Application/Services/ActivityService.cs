@@ -1,12 +1,19 @@
 using System;
+
 using System.Collections.Generic;
+
 using System.Linq;
+
 using System.Threading.Tasks;
 
 using ReUse.Application.DTOs;
+
 using ReUse.Application.Interfaces;
+
 using ReUse.Application.Interfaces.Repository;
+
 using ReUse.Application.Interfaces.Services;
+
 using ReUse.Domain.Entities;
 
 namespace ReUse.Application.Services;
