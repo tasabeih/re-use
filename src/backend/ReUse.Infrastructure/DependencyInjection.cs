@@ -73,6 +73,7 @@ public static class DependencyInjection
         services.AddScoped<IFavoriteRepository, FavoriteRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<ICommentRepository, CommentRepository>();
+        services.AddScoped<IActivityRepository, ActivityRepository>();
         #endregion
 
         #region Services
@@ -89,7 +90,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthorizationHandler,
         ActiveUserHandler>();
         services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
-
+        services.AddScoped<IActivityService, ActivityService>();
         #endregion
 
         #region ImageServic
