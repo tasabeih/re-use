@@ -30,7 +30,7 @@ public class ActivityController : ControllerBase
         return Ok(items);
     }
 
-    
+
     [HttpGet("me")]
     public async Task<IActionResult> GetMyActivities(int limit = 50)
     {
