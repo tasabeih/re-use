@@ -18,13 +18,15 @@ public class ProductService : IProductService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IProductImageService _productImageService;
+    public readonly IActivityService _activityService;
     private readonly IMapper _mapper;
 
-    public ProductService(IUnitOfWork unitOfWork, IProductImageService productImageService, IMapper mapper)
+    public ProductService(IUnitOfWork unitOfWork, IProductImageService productImageService, IMapper mapper, IActivityService activityService)
     {
         _unitOfWork = unitOfWork;
         _productImageService = productImageService;
         _mapper = mapper;
+        _activityService = activityService;
     }
 
     #region Create
@@ -44,7 +46,9 @@ public class ProductService : IProductService
         var product = _mapper.Map<RegularProduct>(request);
         product.OwnerUserId = sellerId;
 
-        return await PersistProductAsync(product, request.Images);
+        var response = await PersistProductAsync(product, request.Images);
+        await _activityService.CreateActivityAsync(sellerId, product.Id, "product.created", $"Created regular product: {product.Title}");
+        return response;
     }
 
     // SWAP 
@@ -66,11 +70,9 @@ public class ProductService : IProductService
         var product = _mapper.Map<SwapProduct>(request);
         product.OwnerUserId = sellerId;
 
-        return await PersistSwapProductAsync(
-            product,
-            request.OfferImages,
-            request.WantedImages
-        );
+        var response = await PersistSwapProductAsync(product, request.OfferImages, request.WantedImages);
+        await _activityService.CreateActivityAsync(sellerId, product.Id, "product.created", $"Created swap product: {product.Title}");
+        return response;
     }
     // WANTED
     public async Task<ProductResponse> CreateWantedProductAsync(
@@ -88,7 +90,9 @@ public class ProductService : IProductService
         var product = _mapper.Map<WantedProduct>(request);
         product.OwnerUserId = sellerId;
 
-        return await PersistProductAsync(product, request.Images);
+        var response = await PersistProductAsync(product, request.Images);
+        await _activityService.CreateActivityAsync(sellerId, product.Id, "product.created", $"Created wanted product: {product.Title}");
+        return response;
     }
 
     #endregion
@@ -193,6 +197,7 @@ public class ProductService : IProductService
             throw new BadRequestException("Product must have a valid price after update");
 
         await _unitOfWork.SaveChangesAsync();
+        await _activityService.CreateActivityAsync(userId, productId, "product.updated", $"Updated regular product: {product.Title}");
 
     }
 
@@ -227,7 +232,7 @@ public class ProductService : IProductService
             throw new BadRequestException("Swap product must have a wanted item title");
 
         await _unitOfWork.SaveChangesAsync();
-
+        await _activityService.CreateActivityAsync(userId, productId, "product.updated", $"Updated swap product: {product.Title}");
     }
 
     public async Task UpdateWantedProductAsync(
@@ -263,6 +268,7 @@ public class ProductService : IProductService
             throw new BadRequestException("Maximum price must be >= minimum price after update");
 
         await _unitOfWork.SaveChangesAsync();
+        await _activityService.CreateActivityAsync(userId, productId, "product.updated", $"Updated wanted product: {product.Title}");
     }
 
     #endregion
@@ -285,6 +291,7 @@ public class ProductService : IProductService
         product.Status = ProductStatus.Deleted;
 
         await _unitOfWork.SaveChangesAsync();
+        await _activityService.CreateActivityAsync(userId, productId, "product.deleted", $"Deleted product: {product.Title}");
     }
     #endregion
 

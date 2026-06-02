@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using ReUse.Application.DTOs;
+using ReUse.Application.DTOs.Activity;
 
 namespace ReUse.Application.Interfaces.Services;
 
