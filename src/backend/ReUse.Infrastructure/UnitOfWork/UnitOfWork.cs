@@ -25,7 +25,7 @@ public class UnitOfWork : IUnitOfWork
         Favorites = new FavoriteRepository(_context);
         Comments = new CommentRepository(_context);
         Payments = new PaymentRepository(_context);
-        _activityRepository = new ActivityRepository(_context);
+        activities = new ActivityRepository(_context);
     }
     public IUserRepository User { get; private set; }
 
@@ -43,7 +43,7 @@ public class UnitOfWork : IUnitOfWork
     public ICommentRepository Comments { get; private set; }
 
     public IPaymentRepository Payments { get; private set; }
-    public IActivityRepository _activityRepository { get; private set; }
+    public IActivityRepository activities { get; private set; }
 
     public async Task CommitTransactionAsync()
     {
