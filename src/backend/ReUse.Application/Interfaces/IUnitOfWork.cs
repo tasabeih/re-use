@@ -21,6 +21,7 @@ public interface IUnitOfWork : IDisposable
     IPaymentRepository Payments { get; }
 
     ICommentRepository Comments { get; }
+    IActivityRepository activities { get; }
 
     Task<int> SaveChangesAsync();
     void Dispose();

@@ -47,7 +47,8 @@ public class ProductService : IProductService
         product.OwnerUserId = sellerId;
 
         var response = await PersistProductAsync(product, request.Images);
-        await _activityService.CreateActivityAsync(sellerId, product.Id, "product.created", $"Created regular product: {product.Title}");
+        try { await _activityService.CreateActivityAsync(sellerId, product.Id, "product.created", $"Created regular product: {product.Title}"); }
+        catch { /* Activity logging must not fail the main operation */ }
         return response;
     }
 
@@ -71,7 +72,8 @@ public class ProductService : IProductService
         product.OwnerUserId = sellerId;
 
         var response = await PersistSwapProductAsync(product, request.OfferImages, request.WantedImages);
-        await _activityService.CreateActivityAsync(sellerId, product.Id, "product.created", $"Created swap product: {product.Title}");
+        try { await _activityService.CreateActivityAsync(sellerId, product.Id, "product.created", $"Created swap product: {product.Title}"); }
+        catch { /* Activity logging must not fail the main operation */ }
         return response;
     }
     // WANTED
@@ -91,7 +93,8 @@ public class ProductService : IProductService
         product.OwnerUserId = sellerId;
 
         var response = await PersistProductAsync(product, request.Images);
-        await _activityService.CreateActivityAsync(sellerId, product.Id, "product.created", $"Created wanted product: {product.Title}");
+        try { await _activityService.CreateActivityAsync(sellerId, product.Id, "product.created", $"Created wanted product: {product.Title}"); }
+        catch { /* Activity logging must not fail the main operation */ }
         return response;
     }
 
@@ -197,7 +200,8 @@ public class ProductService : IProductService
             throw new BadRequestException("Product must have a valid price after update");
 
         await _unitOfWork.SaveChangesAsync();
-        await _activityService.CreateActivityAsync(userId, productId, "product.updated", $"Updated regular product: {product.Title}");
+        try { await _activityService.CreateActivityAsync(userId, productId, "product.updated", $"Updated regular product: {product.Title}"); }
+        catch { /* Activity logging must not fail the main operation */ }
 
     }
 
@@ -232,7 +236,8 @@ public class ProductService : IProductService
             throw new BadRequestException("Swap product must have a wanted item title");
 
         await _unitOfWork.SaveChangesAsync();
-        await _activityService.CreateActivityAsync(userId, productId, "product.updated", $"Updated swap product: {product.Title}");
+        try { await _activityService.CreateActivityAsync(userId, productId, "product.updated", $"Updated swap product: {product.Title}"); }
+        catch { /* Activity logging must not fail the main operation */ }
     }
 
     public async Task UpdateWantedProductAsync(
@@ -268,7 +273,8 @@ public class ProductService : IProductService
             throw new BadRequestException("Maximum price must be >= minimum price after update");
 
         await _unitOfWork.SaveChangesAsync();
-        await _activityService.CreateActivityAsync(userId, productId, "product.updated", $"Updated wanted product: {product.Title}");
+        try { await _activityService.CreateActivityAsync(userId, productId, "product.updated", $"Updated wanted product: {product.Title}"); }
+        catch { /* Activity logging must not fail the main operation */ }
     }
 
     #endregion
@@ -291,7 +297,8 @@ public class ProductService : IProductService
         product.Status = ProductStatus.Deleted;
 
         await _unitOfWork.SaveChangesAsync();
-        await _activityService.CreateActivityAsync(userId, productId, "product.deleted", $"Deleted product: {product.Title}");
+        try { await _activityService.CreateActivityAsync(userId, productId, "product.deleted", $"Deleted product: {product.Title}"); }
+        catch { /* Activity logging must not fail the main operation */ }
     }
     #endregion
 

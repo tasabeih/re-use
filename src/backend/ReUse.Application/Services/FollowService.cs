@@ -72,7 +72,8 @@ public class FollowService : IFollowService
                 Username = (await _unitOfWork.User.GetByIdAsync(currentUserId))!.FullName
             });
 
-        await _activityService.CreateActivityAsync(currentUserId, null, "user.followed", $"Followed user: {targetUser.FullName}");
+        try { await _activityService.CreateActivityAsync(currentUserId, null, "user.followed", $"Followed user: {targetUser.FullName}"); }
+        catch { /* Activity logging must not fail the main operation */ }
 
         follow.FollowingUser = targetUser;
         return _mapper.Map<FollowResultDto>(follow);
@@ -89,7 +90,8 @@ public class FollowService : IFollowService
         _unitOfWork.Follow.Remove(follow);
         await _unitOfWork.SaveChangesAsync();
 
-        await _activityService.CreateActivityAsync(currentUserId, null, "user.unfollowed");
+        try { await _activityService.CreateActivityAsync(currentUserId, null, "user.unfollowed"); }
+        catch { /* Activity logging must not fail the main operation */ }
     }
 
     public async Task RemoveFollowerAsync(Guid currentUserId, Guid followerUserId)

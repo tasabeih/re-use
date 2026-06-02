@@ -37,7 +37,8 @@ public class FavoriteService : IFavoriteService
         _unitOfWork.Favorites.Add(favorite);
         await _unitOfWork.SaveChangesAsync();
 
-        await _activityService.CreateActivityAsync(userId, productId, "favorite.added");
+        try { await _activityService.CreateActivityAsync(userId, productId, "favorite.added"); }
+        catch { /* Activity logging must not fail the main operation */ }
     }
 
     public async Task RemoveFromFavoritesAsync(Guid userId, Guid productId)
@@ -48,7 +49,8 @@ public class FavoriteService : IFavoriteService
         _unitOfWork.Favorites.Remove(favorite);
         await _unitOfWork.SaveChangesAsync();
 
-        await _activityService.CreateActivityAsync(userId, productId, "favorite.removed");
+        try { await _activityService.CreateActivityAsync(userId, productId, "favorite.removed"); }
+        catch { /* Activity logging must not fail the main operation */ }
     }
 
     public async Task<PagedResult<ProductResponse>> GetUserFavoritesAsync(Guid userId, ProductFilterParams filterParams)
