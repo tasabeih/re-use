@@ -23,12 +23,7 @@ public class ProductService : IProductService
     private readonly IMapper _mapper;
     private readonly IRecommendationService _recommendationService;
 
-    public ProductService(IUnitOfWork unitOfWork, IProductImageService productImageService, IMapper mapper, IActivityService activityService)
-    public ProductService(
-        IUnitOfWork unitOfWork,
-        IProductImageService productImageService,
-        IMapper mapper,
-        IRecommendationService recommendationService)
+    public ProductService(IUnitOfWork unitOfWork, IProductImageService productImageService, IMapper mapper, IActivityService activityService, IRecommendationService recommendationService)
     {
         _unitOfWork = unitOfWork;
         _productImageService = productImageService;
