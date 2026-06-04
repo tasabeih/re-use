@@ -25,6 +25,7 @@ public class UnitOfWork : IUnitOfWork
         Favorites = new FavoriteRepository(_context);
         Comments = new CommentRepository(_context);
         Payments = new PaymentRepository(_context);
+        Recommendations = new RecommendationRepository(_context);
         Feedback = new FeedbackRepository(_context);
     }
     public IUserRepository User { get; private set; }
@@ -44,6 +45,8 @@ public class UnitOfWork : IUnitOfWork
     public IFeedbackRepository Feedback { get; private set; }
 
     public IPaymentRepository Payments { get; private set; }
+
+    public IRecommendationRepository Recommendations { get; private set; }
 
     public async Task CommitTransactionAsync()
     {
