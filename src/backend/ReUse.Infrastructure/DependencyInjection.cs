@@ -76,6 +76,7 @@ public static class DependencyInjection
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<IActivityRepository, ActivityRepository>();
+        services.AddScoped<IFeedbackRepository, FeedbackRepository>();
         #endregion
 
         #region Services
