@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReUse.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using ReUse.Infrastructure.Persistence;
 namespace ReUse.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260531202849_AddRecommendationColumns")]
+    partial class AddRecommendationColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,46 +24,6 @@ namespace ReUse.Infrastructure.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("ReUse.Domain.Entities.ActivityEvent", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Metadata")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ActivityEvents");
-                });
 
             modelBuilder.Entity("ReUse.Domain.Entities.Category", b =>
                 {
@@ -171,63 +134,6 @@ namespace ReUse.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("favorites", (string)null);
-                });
-
-            modelBuilder.Entity("ReUse.Domain.Entities.Feedback", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("RateeUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("RaterUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Stars")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RaterUserId");
-
-                    b.HasIndex("ProductId", "CreatedAt")
-                        .HasFilter("\"IsDeleted\" = false");
-
-                    b.HasIndex("ProductId", "RaterUserId")
-                        .IsUnique();
-
-                    b.HasIndex("RateeUserId", "CreatedAt")
-                        .HasFilter("\"IsDeleted\" = false");
-
-                    b.ToTable("feedbacks", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_Feedback_Rater_Not_Ratee", "\"RaterUserId\" <> \"RateeUserId\"");
-
-                            t.HasCheckConstraint("CK_Feedback_Stars_1_5", "\"Stars\" BETWEEN 1 AND 5");
-                        });
                 });
 
             modelBuilder.Entity("ReUse.Domain.Entities.Follow", b =>
@@ -748,17 +654,6 @@ namespace ReUse.Infrastructure.Persistence.Migrations
                         .IsUnicode(false)
                         .HasColumnType("character varying(2048)");
 
-                    b.Property<decimal>("RatingsAverage")
-                        .ValueGeneratedOnAdd()
-                        .HasPrecision(2, 1)
-                        .HasColumnType("numeric(2,1)")
-                        .HasDefaultValue(0m);
-
-                    b.Property<int>("RatingsCount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
-
                     b.Property<string>("StateProvince")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
@@ -867,23 +762,6 @@ namespace ReUse.Infrastructure.Persistence.Migrations
                     b.HasDiscriminator().HasValue("Wanted");
                 });
 
-            modelBuilder.Entity("ReUse.Domain.Entities.ActivityEvent", b =>
-                {
-                    b.HasOne("ReUse.Domain.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-
-                    b.HasOne("ReUse.Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ReUse.Domain.Entities.Category", b =>
                 {
                     b.HasOne("ReUse.Domain.Entities.Category", "Parent")
@@ -930,33 +808,6 @@ namespace ReUse.Infrastructure.Persistence.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ReUse.Domain.Entities.Feedback", b =>
-                {
-                    b.HasOne("ReUse.Domain.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ReUse.Domain.Entities.User", "Ratee")
-                        .WithMany("FeedbackReceived")
-                        .HasForeignKey("RateeUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ReUse.Domain.Entities.User", "Rater")
-                        .WithMany("FeedbackGiven")
-                        .HasForeignKey("RaterUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Ratee");
-
-                    b.Navigation("Rater");
                 });
 
             modelBuilder.Entity("ReUse.Domain.Entities.Follow", b =>
@@ -1143,10 +994,6 @@ namespace ReUse.Infrastructure.Persistence.Migrations
                     b.Navigation("CategoryFollows");
 
                     b.Navigation("Favorites");
-
-                    b.Navigation("FeedbackGiven");
-
-                    b.Navigation("FeedbackReceived");
 
                     b.Navigation("Followers");
 
