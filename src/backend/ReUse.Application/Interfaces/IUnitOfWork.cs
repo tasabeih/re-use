@@ -23,6 +23,7 @@ public interface IUnitOfWork : IDisposable
     IRecommendationRepository Recommendations { get; }
 
     ICommentRepository Comments { get; }
+    IActivityRepository activities { get; }
 
     IFeedbackRepository Feedback { get; }
 

@@ -10,7 +10,6 @@ using ReUse.Application.Interfaces.Services;
 using ReUse.Domain.Entities;
 using ReUse.Domain.Enums;
 
-
 namespace ReUse.Application.Services;
 
 public class FollowService : IFollowService
@@ -18,31 +17,28 @@ public class FollowService : IFollowService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly INotificationPublisher _notificationPublisher;
-    public FollowService(IUnitOfWork unitOfWork, IMapper mapper, INotificationPublisher notificationPublisher)
+    private readonly IActivityService _activityService;
+
+    public FollowService(IUnitOfWork unitOfWork, IMapper mapper, INotificationPublisher notificationPublisher, IActivityService activityService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _notificationPublisher = notificationPublisher;
+        _activityService = activityService;
     }
+
     public async Task<PagedResult<FollowDto>> GetFollowersAsync(Guid userId, UserFilterParams filterParams)
     {
-        if (userId == Guid.Empty)
-            throw new BadRequestException("UserId cannot be empty");
-
-        var followers = await _unitOfWork.Follow.GetFollowersAsync(userId, filterParams);
-
-        return followers;
+        if (userId == Guid.Empty) throw new BadRequestException("UserId cannot be empty");
+        return await _unitOfWork.Follow.GetFollowersAsync(userId, filterParams);
     }
 
     public async Task<PagedResult<FollowDto>> GetFollowingsAsync(Guid userId, UserFilterParams filterParams)
     {
-        if (userId == Guid.Empty)
-            throw new BadRequestException("UserId cannot be empty");
-
-        var followings = await _unitOfWork.Follow.GetFollowingsAsync(userId, filterParams);
-
-        return followings;
+        if (userId == Guid.Empty) throw new BadRequestException("UserId cannot be empty");
+        return await _unitOfWork.Follow.GetFollowingsAsync(userId, filterParams);
     }
+
     public async Task<FollowResultDto> FollowAsync(Guid currentUserId, Guid targetUserId)
     {
         if (currentUserId == targetUserId)
@@ -51,9 +47,7 @@ public class FollowService : IFollowService
         var targetUser = await _unitOfWork.User.GetByIdAsync(targetUserId)
             ?? throw new NotFoundException(nameof(User));
 
-        var alreadyFollowing = await _unitOfWork.Follow
-            .IsAlreadyFollowingAsync(currentUserId, targetUserId);
-
+        var alreadyFollowing = await _unitOfWork.Follow.IsAlreadyFollowingAsync(currentUserId, targetUserId);
         if (alreadyFollowing)
             throw new ConflictException("You are already following this user.");
 
@@ -67,24 +61,22 @@ public class FollowService : IFollowService
         _unitOfWork.Follow.Add(follow);
         await _unitOfWork.SaveChangesAsync();
 
-        // notification 
         await _notificationPublisher.PublishAsync<FollowNotificationData>(
-         userId: targetUserId,
-         type: NotificationType.FollowActivity,
-         title: "New Follow",
-         body: "Someone followed you",
-          data: new FollowNotificationData
-          {
-              FollowerId = currentUserId,
-              Username = (await _unitOfWork.User.GetByIdAsync(currentUserId))!.FullName
-          }
-          );
+            userId: targetUserId,
+            type: NotificationType.FollowActivity,
+            title: "New Follow",
+            body: "Someone followed you",
+            data: new FollowNotificationData
+            {
+                FollowerId = currentUserId,
+                Username = (await _unitOfWork.User.GetByIdAsync(currentUserId))!.FullName
+            });
 
-        // Populate navigation property => AutoMapper can read FollowingUser
+        try { await _activityService.CreateActivityAsync(currentUserId, null, "user.followed", $"Followed user: {targetUser.FullName}"); }
+        catch { /* Activity logging must not fail the main operation */ }
+
         follow.FollowingUser = targetUser;
-
-        var result = _mapper.Map<FollowResultDto>(follow);
-        return result;
+        return _mapper.Map<FollowResultDto>(follow);
     }
 
     public async Task UnfollowAsync(Guid currentUserId, Guid targetUserId)
@@ -98,6 +90,8 @@ public class FollowService : IFollowService
         _unitOfWork.Follow.Remove(follow);
         await _unitOfWork.SaveChangesAsync();
 
+        try { await _activityService.CreateActivityAsync(currentUserId, null, "user.unfollowed"); }
+        catch { /* Activity logging must not fail the main operation */ }
     }
 
     public async Task RemoveFollowerAsync(Guid currentUserId, Guid followerUserId)
@@ -108,12 +102,7 @@ public class FollowService : IFollowService
         var follow = await _unitOfWork.Follow.GetFollowAsync(followerUserId, currentUserId)
             ?? throw new NotFoundException("This user is not following you.");
 
-        var followerName = follow.FollowerUser.FullName;
-        var removedId = follow.FollowerUser.Id;
-
         _unitOfWork.Follow.Remove(follow);
         await _unitOfWork.SaveChangesAsync();
-
     }
-
 }

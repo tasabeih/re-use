@@ -64,6 +64,7 @@ public static class DependencyInjection
         services.AddScoped<IFavoriteRepository, FavoriteRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<ICommentRepository, CommentRepository>();
+        services.AddScoped<IActivityRepository, ActivityRepository>();
         services.AddScoped<IRecommendationRepository, RecommendationRepository>();
         services.AddScoped<IFeedbackRepository, FeedbackRepository>();
         #endregion
@@ -79,6 +80,7 @@ public static class DependencyInjection
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<IAuthorizationHandler, ActiveUserHandler>();
         services.AddScoped<INotificationDispatcher, NotificationDispatcher>();
+        services.AddScoped<IActivityService, ActivityService>();
         services.AddScoped<IAdminUserService, AdminUserService>();
         services.AddHttpClient<IPaymentService, PaymobService>();
 
