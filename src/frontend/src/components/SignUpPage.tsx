@@ -4,6 +4,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Checkbox } from "./ui/checkbox";
 import { signUpApi } from "../services/authService";
+import { Link } from "react-router-dom";
 
 interface SignUpPageProps {
   onNavigateToLogin?: () => void;
@@ -421,13 +422,9 @@ export function SignUpPage({ onNavigateToLogin, onNavigateToVerification }: Sign
                 className="text-[14px] text-gray-600 font-normal leading-relaxed cursor-pointer"
               >
                 I agree to the{" "}
-                <a href="/terms" className="text-[#4B0082] hover:underline font-medium">
-                  Terms of Service
-                </a>{" "}
-                and{" "}
-                <a href="/terms" className="text-[#4B0082] hover:underline font-medium">
-                  Privacy Policy
-                </a>
+                <Link to="/legal" className="text-[#4B0082] hover:underline font-medium">
+                  Terms and Privacy Policy
+                </Link>
               </Label>
             </div>
             {errors.terms && (
