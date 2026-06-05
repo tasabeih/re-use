@@ -76,9 +76,9 @@ function getUrlState(searchParams: URLSearchParams) {
       ? sortParam
       : sortParam === "relevance" && searchQuery.trim()
         ? "relevance"
-      : searchQuery.trim()
-        ? "relevance"
-        : "newest";
+        : searchQuery.trim()
+          ? "relevance"
+          : "newest";
 
   return {
     filters: {

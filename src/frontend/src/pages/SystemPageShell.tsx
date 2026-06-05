@@ -40,7 +40,9 @@ export default function SystemPageShell({
           ) : null}
           <h1 className="text-3xl font-bold tracking-normal text-gray-950 sm:text-4xl">{title}</h1>
           <p className="mt-3 text-base leading-7 text-gray-600">{description}</p>
-          {children ? <div className="mt-6 space-y-5 text-sm leading-6 text-gray-700">{children}</div> : null}
+          {children ? (
+            <div className="mt-6 space-y-5 text-sm leading-6 text-gray-700">{children}</div>
+          ) : null}
           {actions.length > 0 ? (
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               {actions.map((action) => {
@@ -59,7 +61,12 @@ export default function SystemPageShell({
                 }
 
                 return (
-                  <button key={action.label} type="button" onClick={action.onClick} className={className}>
+                  <button
+                    key={action.label}
+                    type="button"
+                    onClick={action.onClick}
+                    className={className}
+                  >
                     {action.icon}
                     {action.label}
                   </button>
