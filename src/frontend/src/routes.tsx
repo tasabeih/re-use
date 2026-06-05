@@ -24,6 +24,7 @@ import UserManagementPageWrapper from "./pages/UserManagementPageWrapper";
 import NotFoundPage from "./pages/NotFoundPage";
 import GlobalErrorPage from "./pages/GlobalErrorPage";
 import LegalPage from "./pages/LegalPage";
+import SearchRedirectPage from "./pages/SearchRedirectPage";
 
 const routeErrorElement = <GlobalErrorPage />;
 
@@ -37,6 +38,11 @@ export const router = createBrowserRouter([
   {
     path: "/products",
     Component: ProductsPageWrapper,
+    errorElement: routeErrorElement,
+  },
+  {
+    path: "/search",
+    Component: SearchRedirectPage,
     errorElement: routeErrorElement,
   },
   {

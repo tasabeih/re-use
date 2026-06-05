@@ -50,7 +50,7 @@ export interface ProductsQuery {
   minPrice?: number;
   maxPrice?: number;
   location?: string;
-  sortBy?: "Newest" | "Price";
+  sortBy?: "Relevance" | "Newest" | "Price";
   sortDirection?: "Asc" | "Desc";
 }
 
