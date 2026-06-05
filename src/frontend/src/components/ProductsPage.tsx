@@ -129,15 +129,17 @@ export function ProductsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const urlState = getUrlState(searchParams);
 
-  const [viewMode, setViewMode] = useState<ViewMode>(urlState.viewMode);
-  const [sortBy, setSortBy] = useState<SortOption>(urlState.sortBy);
+  const appliedFilters = urlState.filters;
+  const sortBy = urlState.sortBy;
+  const viewMode = urlState.viewMode;
+  const currentPage = urlState.page;
+
   const [showFilters, setShowFilters] = useState(true);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
 
   const [products, setProducts] = useState<ProductResponse[]>([]);
   const [totalRecords, setTotalRecords] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  const [currentPage, setCurrentPage] = useState(urlState.page);
   const [productsLoading, setProductsLoading] = useState(true);
   const [productsError, setProductsError] = useState<string | null>(null);
 
@@ -156,11 +158,16 @@ export function ProductsPage() {
   }, []);
 
   const [draftFilters, setDraftFilters] = useState<FilterState>(urlState.filters);
-  const [appliedFilters, setAppliedFilters] = useState<FilterState>(urlState.filters);
+  const [prevSearchParams, setPrevSearchParams] = useState(searchParams.toString());
+
+  if (searchParams.toString() !== prevSearchParams) {
+    setPrevSearchParams(searchParams.toString());
+    setDraftFilters(urlState.filters);
+    setProductsLoading(true);
+  }
 
   useEffect(() => {
     let cancelled = false;
-    setProductsLoading(true);
 
     const sortMap = {
       relevance: { sortBy: "Relevance" as const, sortDirection: "Desc" as const },
@@ -210,16 +217,6 @@ export function ProductsPage() {
       cancelled = true;
     };
   }, [sortBy, appliedFilters, currentPage]);
-
-  // Sync state if URL changes externally (e.g. back button or external navigation)
-  useEffect(() => {
-    const next = getUrlState(searchParams);
-    setAppliedFilters(next.filters);
-    setDraftFilters(next.filters);
-    setSortBy(next.sortBy);
-    setViewMode(next.viewMode);
-    setCurrentPage(next.page);
-  }, [searchParams]);
 
   // Live search debounce
   useEffect(() => {
