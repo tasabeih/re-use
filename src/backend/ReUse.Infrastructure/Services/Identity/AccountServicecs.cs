@@ -122,7 +122,7 @@ public class AccountService : IAccountService
         await _cache.RemoveAsync($"user:active:{userId}");
     }
 
-    public async Task DeleteAccountAsync(Guid userId, DeactivateAccountRequest request)
+    public async Task DeleteAccountAsync(Guid userId, DeleteAccountRequest request)
     {
         var user = await _unitOfWork.User.GetByIdAsync(userId)
             ?? throw new NotFoundException(nameof(User));
@@ -134,10 +134,14 @@ public class AccountService : IAccountService
         if (!passwordValid)
             throw new ForbiddenException();
 
-        await _unitOfWork.Follow.DeleteByUserIdAsync(userId);
-        _unitOfWork.User.Remove(user);
 
-        _tokenService.RevokeAllAsync(identityUser);
+        await _unitOfWork.Product.DeleteByUserIdAsync(userId);
+        await _unitOfWork.Follow.DeleteByUserIdAsync(userId);
+        await _unitOfWork.Comments.DeleteByUserIdAsync(userId);
+
+        _unitOfWork.User.Remove(user);
+        await _unitOfWork.SaveChangesAsync();
+
         var result = await _userManager.DeleteAsync(identityUser);
         if (!result.Succeeded)
         {
@@ -145,10 +149,7 @@ public class AccountService : IAccountService
             throw new IdentityOperationException(errors);
         }
 
-        await _unitOfWork.SaveChangesAsync();
-
         await _cache.RemoveAsync($"user:active:{userId}");
     }
-
 
 }
