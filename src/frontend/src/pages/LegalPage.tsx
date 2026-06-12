@@ -34,13 +34,7 @@ const CONTACT_DETAILS = (
   </ul>
 );
 
-function ExpandableSection({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function ExpandableSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <details className="group rounded-lg border border-gray-200 [&:not(:first-child)]:mt-3">
       <summary className="flex cursor-pointer items-center justify-between px-4 py-3 text-sm font-semibold text-gray-900 [&::-webkit-details-marker]:hidden">
@@ -124,7 +118,9 @@ function TermsTab() {
           <li>You must accurately describe items and provide clear photos</li>
           <li>You are responsible for shipping items promptly and securely</li>
           <li>You must comply with all applicable laws regarding the sale of goods</li>
-          <li>Prohibited items include counterfeit goods, hazardous materials, and illegal items</li>
+          <li>
+            Prohibited items include counterfeit goods, hazardous materials, and illegal items
+          </li>
         </ul>
         <p className="mt-3 font-semibold">For Buyers</p>
         <ul className="mt-1 list-disc space-y-1 pl-5">
@@ -149,7 +145,8 @@ function TermsTab() {
 
       <ExpandableSection title="5. Disputes & Refunds">
         <p>
-          If you have an issue with a transaction, you may open a dispute within 10 days of delivery.
+          If you have an issue with a transaction, you may open a dispute within 10 days of
+          delivery.
         </p>
         <p className="mt-2 font-semibold">Valid Reasons for Disputes:</p>
         <ul className="mt-1 list-disc space-y-1 pl-5">
@@ -239,9 +236,7 @@ function PrivacyTab() {
           <li>Payment processors for transaction processing</li>
           <li>Law enforcement when required by law</li>
         </ul>
-        <p className="mt-2">
-          We never sell your personal information to third parties.
-        </p>
+        <p className="mt-2">We never sell your personal information to third parties.</p>
       </ExpandableSection>
 
       <ExpandableSection title="4. Data Security">
@@ -341,9 +336,7 @@ export default function LegalPage() {
         ))}
       </div>
 
-      <div className="mt-6">
-        {activeTab === "terms" ? <TermsTab /> : <PrivacyTab />}
-      </div>
+      <div className="mt-6">{activeTab === "terms" ? <TermsTab /> : <PrivacyTab />}</div>
     </SystemPageShell>
   );
 }
