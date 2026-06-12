@@ -22,7 +22,6 @@ public static class ProductQueryExtensions
             p.Description.ToLower().Contains(term) ||
             p.Category.Name.ToLower().Contains(term) ||
             (p.Category.Description != null && p.Category.Description.ToLower().Contains(term)) ||
-            p.Owner.FullName.ToLower().Contains(term) ||
             (p is SwapProduct &&
                 (((SwapProduct)p).WantedItemTitle.ToLower().Contains(term) ||
                  (((SwapProduct)p).WantedItemDescription != null &&
@@ -120,10 +119,6 @@ public static class ProductQueryExtensions
                 .ThenByDescending(p => p.Title.ToLower().StartsWith(term))
                 .ThenByDescending(p => p.Title.ToLower().Contains(term))
                 .ThenByDescending(p => p.Category.Name.ToLower().Contains(term))
-                .ThenByDescending(p => p.Owner.FullName.ToLower().Contains(term))
-                .ThenByDescending(p =>
-                    (p.LocationCity != null && p.LocationCity.ToLower().Contains(term)) ||
-                    (p.LocationCountry != null && p.LocationCountry.ToLower().Contains(term)))
                 .ThenByDescending(p => p.Description.ToLower().Contains(term))
                 .ThenByDescending(p =>
                     p is SwapProduct &&

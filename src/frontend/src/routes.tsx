@@ -76,11 +76,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/terms",
-    element: <Navigate to="/legal" replace />,
+    element: <Navigate to="/legal?tab=terms" replace />,
   },
   {
     path: "/privacy",
-    element: <Navigate to="/legal" replace />,
+    element: <Navigate to="/legal?tab=privacy" replace />,
   },
   // Only for NON-auth users
   {

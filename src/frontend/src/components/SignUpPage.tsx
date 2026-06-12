@@ -422,8 +422,18 @@ export function SignUpPage({ onNavigateToLogin, onNavigateToVerification }: Sign
                 className="text-[14px] text-gray-600 font-normal leading-relaxed cursor-pointer"
               >
                 I agree to the{" "}
-                <Link to="/legal" className="text-[#4B0082] hover:underline font-medium">
-                  Terms and Privacy Policy
+                <Link
+                  to="/legal?tab=terms"
+                  className="text-[#4B0082] hover:underline font-medium"
+                >
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link
+                  to="/legal?tab=privacy"
+                  className="text-[#4B0082] hover:underline font-medium"
+                >
+                  Privacy Policy
                 </Link>
               </Label>
             </div>
