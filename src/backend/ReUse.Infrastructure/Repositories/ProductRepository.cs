@@ -40,6 +40,7 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
 => await _context.Products
    .AsNoTracking()
    .Include(p => p.ProductImages.OrderBy(i => i.DisplayOrder))
+   .Include(p => p.Category)
    .Include(p => p.Owner)
    .Where(p => p.Status == ProductStatus.Active)
    .Where(p => p.Owner.IsActive)
@@ -51,7 +52,7 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
    .FilterByPrice(filterParams.MinPrice, filterParams.MaxPrice)
    .FilterByLocation(filterParams.Location)
    //.FilterBySellerRating(filterParams.MinSellerRating)
-   .ApplySort(filterParams.SortBy, filterParams.SortDirection)
+   .ApplySort(filterParams.SortBy, filterParams.SortDirection, filterParams.SearchTerm)
    .ToPagedListAsync(
        filterParams.Pagination.PageNumber,
        filterParams.Pagination.PageSize);
@@ -86,6 +87,8 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
         MyListingsParams filterParams)
         => await _context.Products
             .AsNoTracking()
+            .Include(p => p.ProductImages)
+            .Include(p => p.Category)
             .AsSplitQuery()
             .Include(p => p.ProductImages.OrderBy(i => i.DisplayOrder))
             .Include(p => p.Owner)
@@ -98,7 +101,7 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
             .FilterByCategories(filterParams.CategoryIds)
             .FilterByPrice(filterParams.MinPrice, filterParams.MaxPrice)
             .FilterByLocation(filterParams.Location)
-            .ApplySort(filterParams.SortBy, filterParams.SortDirection)
+            .ApplySort(filterParams.SortBy, filterParams.SortDirection, filterParams.SearchTerm)
             .ToPagedListAsync(
                 filterParams.Pagination.PageNumber,
                 filterParams.Pagination.PageSize);
@@ -128,6 +131,7 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
         => await _context.Products
             .AsNoTracking()
             .Include(p => p.ProductImages)
+            .Include(p => p.Category)
             .Include(p => p.Owner)
             .Where(p => p.OwnerUserId == ownerId
                      && p.Status == ProductStatus.Active
@@ -138,7 +142,7 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
             .FilterByCategories(filterParams.CategoryIds)
             .FilterByPrice(filterParams.MinPrice, filterParams.MaxPrice)
             .FilterByLocation(filterParams.Location)
-            .ApplySort(filterParams.SortBy, filterParams.SortDirection)
+            .ApplySort(filterParams.SortBy, filterParams.SortDirection, filterParams.SearchTerm)
             .ToPagedListAsync(
                 filterParams.Pagination.PageNumber,
                 filterParams.Pagination.PageSize);
@@ -162,7 +166,7 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
             .FilterByCategories(filterParams.CategoryIds)
             .FilterByPrice(filterParams.MinPrice, filterParams.MaxPrice)
             .FilterByLocation(filterParams.Location)
-            .ApplySort(filterParams.SortBy, filterParams.SortDirection)
+            .ApplySort(filterParams.SortBy, filterParams.SortDirection, filterParams.SearchTerm)
             .ToPagedListAsync(
                 filterParams.Pagination.PageNumber,
                 filterParams.Pagination.PageSize);
