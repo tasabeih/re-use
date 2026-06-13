@@ -27,6 +27,8 @@ import LegalPage from "./pages/LegalPage";
 import SearchRedirectPage from "./pages/SearchRedirectPage";
 
 const routeErrorElement = <GlobalErrorPage />;
+import MyProductsPageWrapper from "./pages/MyProductsPageWrapper";
+import ProductDetailsPageWrapper from "./pages/ProductDetailsPageWrapper";
 
 export const router = createBrowserRouter([
   // Public
@@ -44,6 +46,10 @@ export const router = createBrowserRouter([
     path: "/search",
     Component: SearchRedirectPage,
     errorElement: routeErrorElement,
+  },
+  {
+    path: "/product/:productId",
+    Component: ProductDetailsPageWrapper,
   },
   {
     path: "/categories",
@@ -160,6 +166,10 @@ export const router = createBrowserRouter([
       {
         path: "/admin/settings",
         element: <Navigate to="/account-settings" replace />,
+      },
+      {
+        path: "/my-products",
+        Component: MyProductsPageWrapper,
       },
     ],
   },

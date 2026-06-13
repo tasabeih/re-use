@@ -1,5 +1,6 @@
 using ReUse.API.Extensions;
 using ReUse.Application;
+using ReUse.Application.Hubs;
 using ReUse.Infrastructure;
 using ReUse.Infrastructure.Notifications.SignalR;
 
@@ -50,7 +51,7 @@ public class Program
         app.UsePipeline();
 
         app.MapHub<NotificationHub>("/hubs/notifications");
-
+        app.MapHub<ChatHub>("/hubs/chat");
         app.Run();
     }
 }

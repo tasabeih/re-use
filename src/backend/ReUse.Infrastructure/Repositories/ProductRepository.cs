@@ -89,7 +89,10 @@ public class ProductRepository : BaseRepository<Product>, IProductRepository
             .AsNoTracking()
             .Include(p => p.ProductImages)
             .Include(p => p.Category)
+            .AsSplitQuery()
+            .Include(p => p.ProductImages.OrderBy(i => i.DisplayOrder))
             .Include(p => p.Owner)
+            .Include(p => p.Favorites)
             .Where(p => p.OwnerUserId == ownerId)
             .FilterByStatus(filterParams.Status)   // seller only
             .Search(filterParams.SearchTerm)
