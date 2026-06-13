@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore.Storage;
 
 using ReUse.Application.Interfaces;
@@ -22,12 +21,16 @@ public class UnitOfWork : IUnitOfWork
         CategoryFollow = new CategoryFollowRepository(_context);
         Product = new ProductRepository(_context);
         Notifications = new NotificationRepository(_context);
+
         Favorites = new FavoriteRepository(_context);
         Comments = new CommentRepository(_context);
         Payments = new PaymentRepository(_context);
         activities = new ActivityRepository(_context);
         Recommendations = new RecommendationRepository(_context);
         Feedback = new FeedbackRepository(_context);
+
+        Conversation = new ConversationRepository(_context);
+        Message = new MessageRepository(_context);
     }
     public IUserRepository User { get; private set; }
 
@@ -41,6 +44,7 @@ public class UnitOfWork : IUnitOfWork
 
     public INotificationRepository Notifications { get; private set; }
 
+
     public IFavoriteRepository Favorites { get; private set; }
     public ICommentRepository Comments { get; private set; }
     public IFeedbackRepository Feedback { get; private set; }
@@ -49,6 +53,10 @@ public class UnitOfWork : IUnitOfWork
     public IActivityRepository activities { get; private set; }
 
     public IRecommendationRepository Recommendations { get; private set; }
+
+    public IConversationRepository Conversation { get; private set; }
+    public IMessageRepository Message { get; private set; }
+
 
     public async Task CommitTransactionAsync()
     {

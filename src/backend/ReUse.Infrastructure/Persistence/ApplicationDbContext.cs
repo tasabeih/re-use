@@ -20,6 +20,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Follow> Follows { get; set; }
 
     public DbSet<CategoryFollow> CategoryFollows { get; set; }
+    public DbSet<Message> Messages { get; set; }
+    public DbSet<Conversation> Conversations { get; set; }
 
     public DbSet<Favorite> Favorites { get; set; }
     public DbSet<ActivityEvent> ActivityEvents { get; set; }

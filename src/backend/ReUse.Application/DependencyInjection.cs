@@ -13,7 +13,7 @@ namespace ReUse.Application;
 public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services,
-           IConfiguration configuration)
+        IConfiguration configuration)
     {
         #region Services
         services.AddScoped<IFollowService, FollowService>();
@@ -29,6 +29,7 @@ public static class DependencyInjection
         services.AddScoped<ICommentService, CommentService>();
         services.AddScoped<IRecommendationService, RecommendationService>();
         services.AddScoped<IFeedbackService, FeedbackService>();
+        services.AddScoped<IConversationService, ConversationService>();
         #endregion
 
         // Recommendation weights 

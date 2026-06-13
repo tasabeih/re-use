@@ -21,6 +21,9 @@ public interface IUnitOfWork : IDisposable
     IPaymentRepository Payments { get; }
 
     IRecommendationRepository Recommendations { get; }
+    IConversationRepository Conversation { get; }
+    IMessageRepository Message { get; }
+
 
     ICommentRepository Comments { get; }
     IActivityRepository activities { get; }
