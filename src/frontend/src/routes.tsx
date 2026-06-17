@@ -27,6 +27,8 @@ import NotFoundPage from "./pages/NotFoundPage";
 import GlobalErrorPage from "./pages/GlobalErrorPage";
 import LegalPage from "./pages/LegalPage";
 import SearchRedirectPage from "./pages/SearchRedirectPage";
+import ActivityHistoryPageWrapper from "./pages/ActivityHistoryPageWrapper";
+
 import MyProductsPageWrapper from "./pages/MyProductsPageWrapper";
 import ProductDetailsPageWrapper from "./pages/ProductDetailsPageWrapper";
 import AdminReportsPageWrapper from "./pages/AdminReportsPageWrapper";
@@ -185,6 +187,10 @@ export const router = createBrowserRouter([
           {
             path: "/my-products",
             Component: MyProductsPageWrapper,
+          },
+          {
+            path: "/activity-history",
+            Component: ActivityHistoryPageWrapper,
           },
         ],
       },

@@ -10,6 +10,7 @@ import {
   ShoppingCart,
   Menu,
   X,
+  History,
 } from "lucide-react";
 import { SearchBar } from "./SearchBar";
 import { useNavigate } from "react-router-dom";
@@ -208,19 +209,7 @@ export function LoggedInNavbar({ onLogout }: LoggedInNavbarProps) {
                         }}
                         className="w-full px-4 py-2.5 text-left text-[14px] text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-3"
                       >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 10V3L4 14h7v7l9-11h-7z"
-                          />
-                        </svg>
+                        <History className="w-4 h-4" />
                         Activity
                       </button>
                       <button
@@ -488,6 +477,16 @@ export function LoggedInNavbar({ onLogout }: LoggedInNavbarProps) {
               >
                 <ShoppingCart className="w-5 h-5" />
                 My Products
+              </button>
+              <button
+                onClick={() => {
+                  navigate("/activity-history");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full text-white text-[15px] font-medium px-4 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-all duration-200 text-left flex items-center gap-3"
+              >
+                <History className="w-5 h-5" />
+                Activity
               </button>
               <button
                 onClick={() => {
