@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { SlidersHorizontal, Grid3x3, List, Package, TrendingUp, X, Search } from "lucide-react";
 import { loadCategories, type Category } from "./data/categories";
 import { Pagination } from "./ui/Pagination";
 import { FavoriteButton } from "./FavoriteButton";
 import { listProducts } from "../services/productService";
+import { trackActivity } from "../services/activityService";
+import { useAuth } from "../context/AuthContext";
 import type { ProductResponse, ProductCondition, ProductType } from "../services/productService";
 
 const CONDITION_LABELS: Record<string, string> = {
@@ -140,6 +142,9 @@ export function ProductsPage() {
   const viewMode = urlState.viewMode;
   const currentPage = urlState.page;
 
+  const { isAuthenticated } = useAuth();
+  const lastTrackedSearch = useRef("");
+
   const [showFilters, setShowFilters] = useState(true);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
 
@@ -212,6 +217,14 @@ export function ProductsPage() {
           setTotalPages(page.totalPages);
           setProductsError(null);
           setProductsLoading(false);
+
+          if (isAuthenticated && searchQuery && searchQuery !== lastTrackedSearch.current) {
+            lastTrackedSearch.current = searchQuery;
+            trackActivity({
+              type: "searched",
+              description: `searched for "${searchQuery}"`,
+            }).catch(() => {});
+          }
         }
       })
       .catch((err: Error) => {
@@ -224,7 +237,7 @@ export function ProductsPage() {
     return () => {
       cancelled = true;
     };
-  }, [sortBy, appliedFilters, currentPage]);
+  }, [sortBy, appliedFilters, currentPage, isAuthenticated]);
 
   // Live search debounce
   useEffect(() => {

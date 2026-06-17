@@ -17,6 +17,7 @@ import {
   ChevronDown,
   BarChart3,
   FolderTree,
+  History,
 } from "lucide-react";
 import { getAdminCategoryTree, type CategoryResponse } from "../services/categoryService";
 import { useAuth } from "../context/AuthContext";
@@ -309,6 +310,17 @@ export function AdminNavbar() {
                     >
                       <Settings className="w-4 h-4 text-gray-600" />
                       <span className="text-sm text-gray-700">Settings</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        navigate("/activity-history");
+                        setIsProfileOpen(false);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors text-left"
+                    >
+                      <History className="w-4 h-4 text-gray-600" />
+                      <span className="text-sm text-gray-700">Activity</span>
                     </button>
 
                     <button

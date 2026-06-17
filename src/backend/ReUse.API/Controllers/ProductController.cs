@@ -87,6 +87,18 @@ public class ProductController : ControllerBase
             await svc.TrackViewAsync(productId, userId, ip, ua);
         });
 
+        if (userId.HasValue)
+        {
+            _ = Task.Run(async () =>
+            {
+                using var scope = _scopeFactory.CreateScope();
+                var activityService = scope.ServiceProvider.GetRequiredService<IActivityService>();
+                await activityService.CreateActivityAsync(
+                    userId.Value, productId, "product.viewed",
+                    $"Viewed product: {result.Title}");
+            });
+        }
+
         return Ok(result);
     }
 

@@ -24,6 +24,7 @@ import {
 import type { CommentResponse } from "../services/commentService";
 import { useAuth } from "../context/AuthContext";
 import { useFavorites } from "../context/FavoritesContext";
+import { trackActivity } from "../services/activityService";
 
 function formatPrice(p: ProductDetailsResponse): string {
   if (p.type === "Wanted") {
@@ -168,6 +169,14 @@ export function ProductDetailsPage() {
       setProduct(p);
       setCurrentImageIndex(0);
 
+      if (isAuthenticated) {
+        trackActivity({
+          productId: p.id,
+          type: "product.viewed",
+          description: `Viewed product: ${p.title}`,
+        }).catch(() => {});
+      }
+
       const commentsResult = await getProductComments(productId, {
         pageNumber: 1,
         pageSize: 50,
@@ -188,7 +197,7 @@ export function ProductDetailsPage() {
     return () => {
       cancelled = true;
     };
-  }, [productId]);
+  }, [productId, isAuthenticated]);
 
   if (loading) {
     return (
