@@ -31,6 +31,7 @@ public class UnitOfWork : IUnitOfWork
 
         Conversation = new ConversationRepository(_context);
         Message = new MessageRepository(_context);
+        SystemActivityLogs = new SystemActivityLogRepository(_context);
 
         Reports = new ReportRepository(_context);
         Broadcasts = new BroadcastRepository(_context);
@@ -61,6 +62,8 @@ public class UnitOfWork : IUnitOfWork
 
     public IConversationRepository Conversation { get; private set; }
     public IMessageRepository Message { get; private set; }
+    public ISystemActivityLogRepository SystemActivityLogs { get; private set; }
+
 
     public IReportRepository Reports { get; private set; }
 

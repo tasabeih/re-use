@@ -35,6 +35,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Feedback> Feedbacks { get; set; }
     public DbSet<ProductDeal> ProductDeals { get; set; }
 
+    public DbSet<SystemActivityLog> SystemActivityLogs { get; set; }
+
     public DbSet<Report> Reports { get; set; }
 
     public DbSet<BroadcastMessage> BroadcastMessages { get; set; }

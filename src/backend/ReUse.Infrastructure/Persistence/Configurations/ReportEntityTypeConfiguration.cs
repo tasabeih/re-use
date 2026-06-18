@@ -49,7 +49,13 @@ public class ReportEntityTypeConfiguration : IEntityTypeConfiguration<Report>
         builder.HasOne(r => r.Reporter)
                .WithMany()
                .HasForeignKey(r => r.ReporterUserId)
-               .OnDelete(DeleteBehavior.Restrict);
+               .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Property(r => r.ReporterName)
+               .HasMaxLength(200);
+
+        builder.Property(r => r.ReporterEmail)
+               .HasMaxLength(256);
 
         builder.HasOne(r => r.ReviewedBy)
                .WithMany()

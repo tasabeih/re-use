@@ -27,5 +27,7 @@ public interface IConversationRepository : IBaseRepository<Conversation>
 
     Task<List<Conversation>> GetInactiveConversationsAsync(DateTime cutoff);
 
+    Task DeleteByUserIdAsync(Guid userId);
+
     Task<List<Conversation>> GetByProductIdAsync(Guid productId);
 }

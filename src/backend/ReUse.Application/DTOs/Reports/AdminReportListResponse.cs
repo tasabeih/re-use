@@ -10,7 +10,9 @@ public record AdminReportListResponse
     public ReportReason Reason { get; init; }
     public ReportStatus Status { get; init; }
     public DateTime CreatedAt { get; init; }
-    public ReportUserResponse Reporter { get; init; } = default!;
+    public ReportUserResponse? Reporter { get; init; }
+    public string? ReporterName { get; init; }
+    public string? ReporterEmail { get; init; }
     public ReportUserResponse? ReviewedBy { get; init; }
     public DateTime? ReviewedAt { get; init; }
 }

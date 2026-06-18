@@ -4,8 +4,10 @@ namespace ReUse.Domain.Entities;
 
 public class Report : BaseEntity
 {
-    public Guid ReporterUserId { get; set; }
-    public User Reporter { get; set; } = default!;
+    public Guid? ReporterUserId { get; set; }
+    public User? Reporter { get; set; }
+    public string? ReporterName { get; set; }
+    public string? ReporterEmail { get; set; }
 
     public ReportTargetType TargetType { get; set; }
 

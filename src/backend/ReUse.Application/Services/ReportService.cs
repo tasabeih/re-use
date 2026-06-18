@@ -15,15 +15,22 @@ public class ReportService : IReportService
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly ISystemActivityLogService _activityLog;
 
-    public ReportService(IUnitOfWork unitOfWork, IMapper mapper)
+    public ReportService(
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+        ISystemActivityLogService activityLog)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _activityLog = activityLog;
     }
 
     #region CREATE
-    public async Task<ReportDetailsResponse> CreateAsync(Guid reporterUserId, CreateReportRequest request)
+    public async Task<ReportDetailsResponse> CreateAsync(
+        Guid reporterUserId,
+        CreateReportRequest request)
     {
         var reporter = await _unitOfWork.User.GetByIdAsync(reporterUserId)
             ?? throw new UnauthorizedException();
@@ -33,11 +40,16 @@ public class ReportService : IReportService
 
         await ValidateTargetExistsAsync(request.TargetType, request.TargetId);
 
-        if (request.TargetType == ReportTargetType.User && request.TargetId == reporterUserId)
+        if (request.TargetType == ReportTargetType.User &&
+            request.TargetId == reporterUserId)
+        {
             throw new BadRequestException("You cannot report yourself.");
+        }
 
         var alreadyReported = await _unitOfWork.Reports.ExistsByReporterAsync(
-            reporterUserId, request.TargetType, request.TargetId);
+            reporterUserId,
+            request.TargetType,
+            request.TargetId);
 
         if (alreadyReported)
             throw new ConflictException("Report");
@@ -45,6 +57,8 @@ public class ReportService : IReportService
         var report = new Report
         {
             ReporterUserId = reporterUserId,
+            ReporterName = reporter.FullName,
+            ReporterEmail = reporter.Email,
             TargetType = request.TargetType,
             TargetId = request.TargetId,
             Reason = request.Reason,
@@ -54,6 +68,15 @@ public class ReportService : IReportService
 
         await _unitOfWork.Reports.AddReportAsync(report);
 
+        await TryLogAsync(() =>
+            _activityLog.LogReportCreatedAsync(
+                reporterUserId,
+                report.Id,
+                request.TargetType,
+                request.TargetId,
+                request.Reason,
+                actorName: reporter.FullName,
+                actorEmail: reporter.Email));
 
         var saved = await _unitOfWork.Reports.GetByIdWithDetailsAsync(report.Id)
             ?? throw new NotFoundException("Report");
@@ -73,9 +96,18 @@ public class ReportService : IReportService
     #endregion
 
     #region GET all (admin)
-    public async Task<PagedResult<AdminReportListResponse>> GetAllAsync(AdminReportFilterParams filterParams)
+    public async Task<PagedResult<AdminReportListResponse>> GetAllAsync(
+        AdminReportFilterParams filterParams)
     {
-        var paged = await _unitOfWork.Reports.GetAllAsync(filterParams.Status, filterParams.TargetType, filterParams.ReporterUserId, filterParams.CreatedFrom, filterParams.CreatedTo, filterParams.Pagination, filterParams.SortDirection);
+        var paged = await _unitOfWork.Reports.GetAllAsync(
+            filterParams.Status,
+            filterParams.TargetType,
+            filterParams.ReporterUserId,
+            filterParams.CreatedFrom,
+            filterParams.CreatedTo,
+            filterParams.Pagination,
+            filterParams.SortDirection);
+
         return new PagedResult<AdminReportListResponse>
         {
             Data = _mapper.Map<List<AdminReportListResponse>>(paged.Data),
@@ -92,10 +124,13 @@ public class ReportService : IReportService
         PaginationParams pagination,
         SortDirection sortDirection = SortDirection.Desc)
     {
-        var reporter = await _unitOfWork.User.GetByIdAsync(reporterUserId)
+        _ = await _unitOfWork.User.GetByIdAsync(reporterUserId)
             ?? throw new UnauthorizedException();
 
-        var paged = await _unitOfWork.Reports.GetByReporterAsync(reporterUserId, pagination, sortDirection);
+        var paged = await _unitOfWork.Reports.GetByReporterAsync(
+            reporterUserId,
+            pagination,
+            sortDirection);
 
         return new PagedResult<ReportResponse>
         {
@@ -108,9 +143,12 @@ public class ReportService : IReportService
     #endregion
 
     #region REVIEW
-    public async Task<ReportDetailsResponse> ReviewAsync(Guid reportId, Guid reviewerUserId, ReviewReportRequest request)
+    public async Task<ReportDetailsResponse> ReviewAsync(
+        Guid reportId,
+        Guid reviewerUserId,
+        ReviewReportRequest request)
     {
-        _ = await _unitOfWork.User.GetByIdAsync(reviewerUserId)
+        var reviewer = await _unitOfWork.User.GetByIdAsync(reviewerUserId)
             ?? throw new UnauthorizedException();
 
         var report = await _unitOfWork.Reports.GetByIdWithDetailsAsync(reportId)
@@ -122,7 +160,18 @@ public class ReportService : IReportService
         report.ReviewNotes = request.ReviewNotes;
 
         _unitOfWork.Reports.Update(report);
+
         await _unitOfWork.SaveChangesAsync();
+
+        await TryLogAsync(() =>
+            _activityLog.LogReportReviewedAsync(
+                reviewerUserId,
+                reportId,
+                request.Status,
+                report.TargetType,
+                report.TargetId,
+                actorName: reviewer.FullName,
+                actorEmail: reviewer.Email));
 
         var updated = await _unitOfWork.Reports.GetByIdWithDetailsAsync(reportId)
             ?? throw new NotFoundException("Report");
@@ -154,24 +203,43 @@ public class ReportService : IReportService
         {
             case ReportTargetType.Product:
                 var product = await _unitOfWork.Product.GetByIdAsync(targetId);
+
                 if (product is null || product.Status == ProductStatus.Deleted)
                     throw new NotFoundException("Product");
+
                 break;
 
             case ReportTargetType.Comment:
                 var comment = await _unitOfWork.Comments.GetCommentWithAuthorAsync(targetId);
+
                 if (comment is null || comment.IsDeleted)
                     throw new NotFoundException("Comment");
+
                 break;
 
             case ReportTargetType.User:
                 var user = await _unitOfWork.User.GetByIdAsync(targetId);
+
                 if (user is null)
                     throw new NotFoundException("User");
+
                 break;
 
             default:
                 throw new BadRequestException("Invalid report target type.");
+        }
+    }
+
+    private static async Task TryLogAsync(Func<Task> logAction)
+    {
+        try
+        {
+            await logAction();
+        }
+        catch
+        {
+            // Intentionally ignored:
+            // activity logging should not fail the main operation.
         }
     }
     #endregion
