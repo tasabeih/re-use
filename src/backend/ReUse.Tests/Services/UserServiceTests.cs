@@ -32,6 +32,7 @@ public class UserServiceTests
         _imageValidator = new Mock<IImageValidator>();
         _cloudinary = new Mock<ICloudinaryService>();
 
+
         // Wire UnitOfWork.User to our mocked repository
         _unitOfWork.Setup(u => u.User).Returns(_userRepo.Object);
 
