@@ -571,6 +571,9 @@ public static class ProductSeeder
         var users = await dbContext.Set<User>()
             .ToDictionaryAsync(u => u.Email, u => u.Id);
 
+        var now = DateTime.UtcNow;
+        var idx = 0;
+
         foreach (var seed in RegularProducts)
         {
             var product = new RegularProduct
@@ -585,9 +588,11 @@ public static class ProductSeeder
                 Status = ProductStatus.Active,
                 Price = seed.Price,
                 AllowNegotiation = seed.AllowNegotiation,
+                CreatedAt = now.AddDays(-(365 - idx * 8)),
                 ProductImages = BuildImages(seed.Base.Images, ProductImageType.Offer),
             };
             dbContext.Products.Add(product);
+            idx++;
         }
 
         foreach (var seed in SwapProducts)
@@ -605,9 +610,11 @@ public static class ProductSeeder
                 WantedItemTitle = seed.WantedTitle,
                 WantedItemDescription = seed.WantedDescription,
                 WantedCondition = seed.WantedCondition,
+                CreatedAt = now.AddDays(-(365 - idx * 8)),
                 ProductImages = BuildImages(seed.Base.Images, ProductImageType.Offer),
             };
             dbContext.Products.Add(product);
+            idx++;
         }
 
         foreach (var seed in WantedProducts)
@@ -624,9 +631,11 @@ public static class ProductSeeder
                 Status = ProductStatus.Active,
                 DesiredPriceMin = seed.PriceMin,
                 DesiredPriceMax = seed.PriceMax,
+                CreatedAt = now.AddDays(-(365 - idx * 8)),
                 ProductImages = BuildImages(seed.Base.Images, ProductImageType.Wanted),
             };
             dbContext.Products.Add(product);
+            idx++;
         }
 
         await dbContext.SaveChangesAsync();

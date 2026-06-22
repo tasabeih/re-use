@@ -32,6 +32,7 @@ public static class DependencyInjection
         services.AddScoped<ISystemActivityLogService, SystemActivityLogService>();
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IDashboardService, DashboardService>();
+        services.AddScoped<IAnalyticsService, AnalyticsService>();
 
         #endregion
 

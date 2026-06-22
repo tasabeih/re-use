@@ -28,6 +28,7 @@ public static class DashboardPeriodExtensions
             DashboardPeriod.Last90Days => now.AddDays(-90),
             DashboardPeriod.ThisMonth => new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc),
             DashboardPeriod.ThisYear => new DateTime(now.Year, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+            DashboardPeriod.AllTime => new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             _ => throw new ArgumentOutOfRangeException(nameof(period))
         };
 
@@ -39,6 +40,7 @@ public static class DashboardPeriodExtensions
             DashboardPeriod.Last90Days => (currentStart.AddDays(-90), currentEnd.AddDays(-90)),
             DashboardPeriod.ThisMonth => (currentStart.AddMonths(-1), currentEnd.AddMonths(-1)),
             DashboardPeriod.ThisYear => (currentStart.AddYears(-1), currentEnd.AddYears(-1)),
+            DashboardPeriod.AllTime => (currentStart, currentEnd),
             _ => throw new ArgumentOutOfRangeException(nameof(period))
         };
 

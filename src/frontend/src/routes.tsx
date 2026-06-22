@@ -32,10 +32,11 @@ import ActivityHistoryPageWrapper from "./pages/ActivityHistoryPageWrapper";
 
 import MyProductsPageWrapper from "./pages/MyProductsPageWrapper";
 import ProductDetailsPageWrapper from "./pages/ProductDetailsPageWrapper";
-import AdminReportsPageWrapper from "./pages/AdminReportsPageWrapper";
 import NotificationBroadcastPageWrapper from "./pages/NotificationBroadcastPageWrapper";
 import LogsAuditPageWrapper from "./pages/LogsAuditPageWrapper";
 import ChatPageWrapper from "./pages/ChatPageWrapper";
+import AdminReportsPageWrapper from "./pages/AdminReportsPageWrapper";
+import AdminDashboardPageWrapper from "./pages/AdminDashboardPageWrapper";
 
 const routeErrorElement = <GlobalErrorPage />;
 
@@ -138,6 +139,14 @@ export const router = createBrowserRouter([
         errorElement: routeErrorElement,
         children: [
           {
+            path: "/admin",
+            element: <Navigate to="/admin/dashboard" replace />,
+          },
+          {
+            path: "/admin/dashboard",
+            Component: AdminDashboardPageWrapper,
+          },
+          {
             path: "/admin/categories",
             Component: CategoryManagementPageWrapper,
           },
@@ -148,6 +157,10 @@ export const router = createBrowserRouter([
           {
             path: "/admin/users",
             Component: UserManagementPageWrapper,
+          },
+          {
+            path: "/admin/settings",
+            element: <Navigate to="/account-settings" replace />,
           },
           {
             path: "/admin/payments",
@@ -195,10 +208,6 @@ export const router = createBrowserRouter([
           {
             path: "/account-settings",
             Component: AccountSettingsPageWrapper,
-          },
-          {
-            path: "/admin/settings",
-            element: <Navigate to="/account-settings" replace />,
           },
           {
             path: "/my-products",

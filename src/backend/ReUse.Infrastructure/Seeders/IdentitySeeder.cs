@@ -67,6 +67,7 @@ public static class IdentitySeeder
                 IdentityUserId = user.Id,
                 Email = adminEmail,
                 FullName = adminFullName!,
+                CreatedAt = DateTime.UtcNow.AddDays(-365),
             };
 
             dbContext.Add(admin);

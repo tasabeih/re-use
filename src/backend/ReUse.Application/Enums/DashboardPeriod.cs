@@ -13,5 +13,6 @@ public enum DashboardPeriod
     Last30Days,
     Last90Days,
     ThisMonth,
-    ThisYear
+    ThisYear,
+    AllTime
 }
