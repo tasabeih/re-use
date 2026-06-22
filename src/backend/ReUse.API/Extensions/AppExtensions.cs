@@ -37,6 +37,7 @@ public static class AppExtensions
         FavoriteSeeder.SeedAsync(services).GetAwaiter().GetResult();
         CommentSeeder.SeedAsync(services).GetAwaiter().GetResult();
         ActivitySeeder.SeedAsync(services).GetAwaiter().GetResult();
+        OrderSeeder.SeedAsync(services).GetAwaiter().GetResult();
     }
 
     public static void UseSwaggerServices(this WebApplication app)

@@ -4,9 +4,7 @@ import {
   LayoutDashboard,
   Users,
   Package,
-  ShoppingBag,
   DollarSign,
-  Star,
   Flag,
   FileText,
   Bell,
@@ -15,7 +13,6 @@ import {
   Menu,
   X,
   ChevronDown,
-  BarChart3,
   FolderTree,
   History,
 } from "lucide-react";
@@ -100,12 +97,9 @@ export function AdminNavbar() {
     },
     {
       label: "Commerce",
-      icon: ShoppingBag,
+      icon: DollarSign,
       single: false,
-      items: [
-        { icon: ShoppingBag, label: "Orders", path: "/admin/orders" },
-        { icon: DollarSign, label: "Payments", path: "/admin/payments" },
-      ],
+      items: [{ icon: DollarSign, label: "Payments", path: "/admin/payments" }],
     },
     {
       label: "Community",
@@ -113,7 +107,6 @@ export function AdminNavbar() {
       single: false,
       items: [
         { icon: Users, label: "Users", path: "/admin/users" },
-        { icon: Star, label: "Reviews", path: "/admin/reviews" },
         { icon: Flag, label: "Reports", path: "/admin/reports" },
       ],
     },
@@ -124,6 +117,7 @@ export function AdminNavbar() {
       items: [
         { icon: Bell, label: "Notifications", path: "/admin/broadcast" },
         { icon: FileText, label: "Logs", path: "/admin/logs" },
+        { icon: Settings, label: "Settings", path: "/admin/settings" },
       ],
     },
   ];
@@ -321,17 +315,6 @@ export function AdminNavbar() {
                     >
                       <History className="w-4 h-4 text-gray-600" />
                       <span className="text-sm text-gray-700">Activity</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        navigate("/admin/analytics");
-                        setIsProfileOpen(false);
-                      }}
-                      className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors text-left"
-                    >
-                      <BarChart3 className="w-4 h-4 text-gray-600" />
-                      <span className="text-sm text-gray-700">Analytics</span>
                     </button>
 
                     <div className="my-2 border-t border-gray-100"></div>

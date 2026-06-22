@@ -70,6 +70,7 @@ public static class DependencyInjection
         services.AddScoped<ISystemActivityLogRepository, SystemActivityLogRepository>();
         services.AddScoped<IReportRepository, ReportRepository>();
         services.AddScoped<IBroadcastRepository, BroadcastRepository>();
+        services.AddScoped<IAnalyticsRepository, AnalyticsRepository>();
         #endregion
 
         #region Services

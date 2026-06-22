@@ -85,7 +85,7 @@ public static class UserSeeder
             "35511",
             "Egypt"),
         new(
-            "omargoher",
+            "omarseeduser",
             "Omar Goher",
             "omar.goher@reuse.dev",
             "Collector of vintage finds and good deals.",
@@ -136,6 +136,7 @@ public static class UserSeeder
 
             if (!domainUserExists)
             {
+                var i = Array.IndexOf(Users, seed);
                 var domainUser = new User
                 {
                     IdentityUserId = identityUser.Id,
@@ -150,6 +151,7 @@ public static class UserSeeder
                     StateProvince = seed.StateProvince,
                     PostalCode = seed.PostalCode,
                     Country = seed.Country,
+                    CreatedAt = DateTime.UtcNow.AddDays(-300 + i * 60),
                 };
 
                 dbContext.Add(domainUser);
